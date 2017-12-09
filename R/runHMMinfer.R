@@ -139,12 +139,8 @@ posterior_inference <- function(alpha, beta, Z = NULL, train = TRUE){
   print(table(pos_state))
   if (train == TRUE){
     print(table(Z))
-    acc = sum(pos_state == Z)/length(Z)
-    return(list(pos_state, acc))
   }
-  else{
-    return(pos_state)
-  }
+  return(pos_state)
 }
 
 
