@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#'Subset out the case 3 data\n#'\n#'Subset out the case 3 data with same mean and different variance. The case 3 data\n#'@param dat The input data (matrix) with rows as different test sites, columns as the samples from two groups with sample size as n1, n2.\n#'@param mean_thresholdPV The p-value threshold for mean test to subset out case 3 data.\n#'@param var_thresholdPV The p-value threshold for variance test to subset out case 3 data.\n#'@param n1 The sample size of group 1.\n#'@param n2 The sample size of group 2.\n#'@return The data frame that has case 3 removed.\n#'@export\n\nremove_case3 <- function(dat, mean_thresholdPV, var_thresholdPV, n1, n2){\n  # threshold to subset case3 data\n  data_df <- data.frame(dat)\n  pv3 <- apply(dat, 1, function(x) t.test(x[1:n1], x[(n1+1):(n1+n2)])$p.value)\n  qv3 <- apply(dat, 1, function(x){\n    l <- list(x[1:n1], x[(n1+1):(n1+n2)])\n    bartlett.test(l)$p.value\n  })\n\n  data_df$pv3 <- pv3\n  data_df$qv3 <- qv3\n  case3 <- subset(data_df, pv3 >= mean_thresholdPV & qv3 <= var_thresholdPV)\n  case3 <- case3[, -c(n1+n2+1, n1+n2+2)]\n\n  rowname <- rownames(case3)\n  rowno <- as.numeric(rowname)\n  data_df <- data_df[-rowno, 1:(n1+n2)]\n  return(data_df)\n}\n\n\n\n#'Initial parameter estimate\n#'\n#'Subset out the case 3 data with same mean and different variance. The case 3 data\n#'@param dat_df The input data frame with case 3 removed.\n#'@param mean_thresholdPV The p-value threshold for mean test to subset case 1 data.\n#'@param var_thresholdPV The p-value threshold for variance test to subset case 1 data.\n#'@param n1 The sample size of group 1.\n#'@param n2 The sample size of group 2.\n#'@param n The total number of tests (test sites, methylation probes).\n#'@return Initial parameter estimate of state proportion parameters and hyper-parameters.\n#'@export\n\ninit_est <- function(dat_df, mean_thresholdPV, var_thresholdPV, n1, n2, n){\n  # input dat_df (case 3 removed)\n  # threshold to subset case1 data\n  pv <- apply(dat_df, 1, function(x) t.test(x[1:n1], x[(n1+1):(n1+n2)])$p.value)\n  qv <- apply(dat_df, 1, function(x){\n    l <- list(x[1:n1], x[(n1+1):(n1+n2)])\n    bartlett.test(l)$p.value\n  })\n  dat_df$pv <- pv\n  dat_df$qv <- qv\n  case1 <- subset(dat_df, pv >= mean_thresholdPV & qv >= var_thresholdPV)\n  case1 <- case1[, -c(n1+n2+1, n1+n2+2)]\n\n  length1 <- dim(case1)[1]\n\n  # use the average values in case 1 dataset for initial hyperparameter estimate\n  mu_1 <- apply(case1, 1, mean)\n  mu_1 <- as.numeric(mu_1)\n  mu_0 <- mean(mu_1)\n\n  mu_1_var <- var(mu_1)\n  sigma_1 <- apply(case1, 1, var)\n  sigma_1 <- as.numeric(sigma_1)\n  sigma_1 <- sigma_1*(n1+n2-1)/(n1+n2-2)\n  sigma_1_mean <- mean(sigma_1)\n  sigma_1_var <- var(sigma_1)\n\n  k_0 <- sigma_1_mean/mu_1_var\n  nu_0 <- 4 + 2*sigma_1_mean^2/sigma_1_var\n  var_0 <- (sigma_1_mean^3 + sigma_1_mean*sigma_1_var)/(sigma_1_mean^2 + 2*sigma_1_var)\n\n  case2 <- subset(dat_df, pv <= mean_thresholdPV & qv >= var_thresholdPV)\n  case2 <- case2[, -c(n1+n2+1, n1+n2+2)]\n  length2 <- dim(case2)[1]\n\n  p3_0 <- (n - dim(dat_df)[1])/n\n  p1_0 <- length1/dim(dat_df)[1]\n  p2_0 <- length2/dim(dat_df)[1]\n  p4_0 <- 1 - p1_0 - p2_0\n  p1_0 <- (1 - p3_0) * p1_0\n  p2_0 <- (1 - p3_0) * p2_0\n  p4_0 <- (1 - p3_0) * p4_0\n  print('initial parameter estimate:')\n  print(c(p1_0, p2_0, p3_0, p4_0, nu_0, var_0, k_0, mu_0))\n  return(c(p1_0, p2_0, p3_0, p4_0, nu_0, var_0, k_0, mu_0))\n}\n",
+    "created" : 1512606810672.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3014178015",
+    "id" : "6B9D2E4A",
+    "lastKnownWriteTime" : 1512607881,
+    "last_content_update" : 1512607881436,
+    "path" : "~/HMMdmdv/R/initEstimate.R",
+    "project_path" : "R/initEstimate.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

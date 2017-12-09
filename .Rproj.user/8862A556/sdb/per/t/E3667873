@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#'Simulation parameter generation\n#'\n#'Generate true parameters for simulations\n#'@param n_state Default: 4. Number of hidden states\n#'@return The list of true parameters for simulations.\n#'@export\n\ntruePara_generation <- function(n_state){\n  initProb = runif(n_state)\n  initProb = initProb/sum(initProb)\n  transProb = matrix(NA, n_state, n_state)\n  for (i in 1:n_state){\n    transProb[i,] = runif(n_state)\n    transProb[i,] = transProb[i,]/sum(transProb[i,])\n  }\n  nu0 = runif(1, 4, 6)\n  var0 = runif(1, 18, 26)\n  k0 = sample(2:4, 1)\n  mu0 = runif(1, 0.5, 2)\n  return(list(nu0, var0, k0, mu0, initProb, transProb))\n}\n\n\n#'Simulation data generation\n#'\n#'Generate data for simulations\n#'@param nu0 Hyperparameter nu0.\n#'@param var0 Hyperparameter var0.\n#'@param k0 Hyperparameter k0.\n#'@param mu0 Hyperparameter mu0.\n#'@param n1 Hyperparameter n1.\n#'@param n2 Hyperparameter n2.\n#'@param initProb Initial state probabilities.\n#'@param transProb Transition probability matrix.\n#'@return The generated data and the true hidden states.\n#'@export\n#'\ndata_generation <- function(nu0, var0, k0, mu0, n, n1, n2, initProb, transProb){\n  X<-matrix(NA, n, n1)\n  Y<-matrix(NA, n, n2)\n  Z<-rep(NA,n)\n  Z[1]<-sample(1:4, 1, prob = initProb)\n\n  for (i in 2:n){\n    Z[i]<-sample(1:4, 1, prob = transProb[Z[i-1],])\n  }\n\n\n  for (i in 1:n){\n    if(Z[i]==1)\n    {\n      sigma<-pscl::rigamma(1,nu0/2,nu0*var0/2)\n      mu<-rnorm(1,mu0,sqrt(sigma/k0))\n      X[i,]<-rnorm(n1,mu,sqrt(sigma))\n      Y[i,]<-rnorm(n2,mu,sqrt(sigma))\n    }\n    else if(Z[i]==2){\n      sigma<-pscl::rigamma(1,nu0/2,nu0*var0/2)\n      mu1<-rnorm(1,mu0,sqrt(sigma/k0))\n      mu2<-rnorm(1,mu0,sqrt(sigma/k0))\n      X[i,]<-rnorm(n1,mu1,sqrt(sigma))\n      Y[i,]<-rnorm(n2,mu2,sqrt(sigma))\n    }\n    else if(Z[i]==3){\n      sigma1<-pscl::rigamma(1,nu0/2,nu0*var0/2)\n      sigma2<-pscl::rigamma(1,nu0/2,nu0*var0/2)\n      mu1<-rnorm(1,mu0,sqrt(sigma1/k0))\n      mu2<-rnorm(1,mu0,sqrt(sigma2/k0))\n      mu<-(mu1+mu2)/2\n      X[i,]<-rnorm(n1,mu,sqrt(sigma1))\n      Y[i,]<-rnorm(n2,mu,sqrt(sigma2))\n    }\n    else{\n      sigma1<-pscl::rigamma(1,nu0/2,nu0*var0/2)\n      sigma2<-pscl::rigamma(1,nu0/2,nu0*var0/2)\n      mu1<-rnorm(1,mu0,sqrt(sigma1/k0))\n      mu2<-rnorm(1,mu0,sqrt(sigma2/k0))\n      X[i,]<-rnorm(n1,mu1,sqrt(sigma1))\n      Y[i,]<-rnorm(n2,mu2,sqrt(sigma2))\n    }\n  }\n\n  A<-cbind(X,Y)\n  print('data generated!')\n  return(list(A, Z))\n}\n",
+    "created" : 1512605762348.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1589374629",
+    "id" : "E3667873",
+    "lastKnownWriteTime" : 1512615028,
+    "last_content_update" : 1512615028670,
+    "path" : "~/HMMdmdv/R/simulations.R",
+    "project_path" : "R/simulations.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

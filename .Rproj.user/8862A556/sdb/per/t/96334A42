@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#'@title example_data\n#'\n#'@description The file contains one example data.\n#'@name example_data\n#'@docType data\n#'@usage example_data\n#'@format A data matirx\n#'@keywords datasets\nNULL\n",
+    "created" : 1512650442883.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1716882448",
+    "id" : "96334A42",
+    "lastKnownWriteTime" : 1512650620,
+    "last_content_update" : 1512650620296,
+    "path" : "~/HMMdmdv/R/data.R",
+    "project_path" : "R/data.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

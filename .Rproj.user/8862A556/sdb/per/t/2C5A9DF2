@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "Package: HMMdmdv\nType: Package\nTitle: Hidden Markov Model for Bayesian inference of large-scale mean and variance testing\nDate: 2017-12-06\nVersion: 0.1.1\nAuthor: Junyan Song\nDepends:\n    R (>= 2.10)\nMaintainer: Junyan Song <jysongane@gmail.com>\nDescription: The HMMdmdv package implements Hidden Markov Model and makes Bayesian inference for large-scale \n             testing of mean and variance in a proposed Bayesian hierarchical mixture model framework.\nLicense: GPL-2\nLazyData: true\nRoxygenNote: 6.0.1\nSuggests: knitr,\n    rmarkdown,\n    testthat\nVignetteBuilder: knitr\nImports: cubature, pscl\n\n",
+    "created" : 1512610860754.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "185455502",
+    "id" : "2C5A9DF2",
+    "lastKnownWriteTime" : 1512660363,
+    "last_content_update" : 1512660363157,
+    "path" : "~/HMMdmdv/DESCRIPTION",
+    "project_path" : "DESCRIPTION",
+    "properties" : {
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "dcf"
+}
